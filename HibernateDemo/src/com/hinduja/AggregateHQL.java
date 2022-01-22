@@ -1,5 +1,7 @@
 package com.hinduja;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -7,11 +9,11 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.query.Query;
 
-public class StoreEmployee {
-
+public class AggregateHQL {
 	
-	public static void main(String[] args) {
+public static void main(String[] args) {
 		
 		StandardServiceRegistry ssr=new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
 		
@@ -23,20 +25,14 @@ public class StoreEmployee {
 		
 		Transaction tx=s.beginTransaction();
 		
-		Employee e=new Employee();
-	
-		e.setName("Tom");
-		e.setDept("Ops");
-		e.setDesignation("Dev");
-		e.setSalary(234556.09f);
-		e.setDoj("2021-09-09");
+		Query<Double> q=s.createQuery("Select sum(salary) from Employee");
+		List<Double> list=q.list();
+		Double salary=list.get(0);
 		
-		s.save(e);
+		System.out.println("Sum of Salary is "+salary);
 		
 		tx.commit();
-		System.out.println("Saved");
-		s.close();
+		}
 		
-		
-	}
+
 }

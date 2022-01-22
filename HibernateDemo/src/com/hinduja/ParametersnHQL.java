@@ -7,11 +7,11 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.query.Query;
 
-public class StoreEmployee {
+public class ParametersnHQL {
 
-	
-	public static void main(String[] args) {
+public static void main(String[] args) {
 		
 		StandardServiceRegistry ssr=new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
 		
@@ -21,22 +21,18 @@ public class StoreEmployee {
 		
 		Session s=sf.openSession();
 		
+		
 		Transaction tx=s.beginTransaction();
 		
-		Employee e=new Employee();
-	
-		e.setName("Tom");
-		e.setDept("Ops");
-		e.setDesignation("Dev");
-		e.setSalary(234556.09f);
-		e.setDoj("2021-09-09");
+		Query<Employee> q=s.createQuery("Update Employee set name=:n where id=:i");
 		
-		s.save(e);
+		q.setParameter("n","CWZ");
+		q.setParameter("i", 12);
+		
+		int status=q.executeUpdate();
+		
+		System.out.println("Employee Updated");
 		
 		tx.commit();
-		System.out.println("Saved");
-		s.close();
-		
-		
 	}
 }
